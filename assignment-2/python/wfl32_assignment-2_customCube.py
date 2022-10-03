@@ -1,4 +1,9 @@
-import string
+# Terminal statements for ease of use.
+print("\n-----------------------------------------------------------")
+print("Please enter your custom cube's WIDTH, HEIGHT, DEPTH, FILEPATH, and FILENAME")
+print("Your input should look like this: \n" + r"12 6 190 C:\Users\<USERNAME>\Desktop\ customCube_v01")
+print("-----------------------------------------------------------\n")
+
 import maya.standalone
 maya.standalone.initialize()
 
@@ -8,19 +13,24 @@ parser = argparse.ArgumentParser(description='This script creates a bunch of cub
 parser.add_argument('cube_width', type=int, help="Value of cube width")
 parser.add_argument('cube_height', type=int, help="Value of cube height")
 parser.add_argument('cube_depth', type=int, help="Value of cube depth")
-parser.add_argument('desktopPath', type=string, help="String Path to desktop")
+parser.add_argument('desktopPath', type=str, help="Copy a path of directory. Idealy the path to the Desktop")
+parser.add_argument('fileName', type=str, help="Name of your file")
 args = parser.parse_args()
+
 
 import maya.cmds as mc
 
-pathInput = string(args.desktopPath)
+# User input to  declare variables
+fileName = args.fileName
+fileNameExt = str(fileName + ".ma")
+pathInput = args.desktopPath
+finalDirectory = str(pathInput) + fileNameExt
 
+# Custom Cube tool starts here.
 mc.polyCube(w = args.cube_width, h = args.cube_height, d = args.cube_depth)
 print("Your custom cube has been created!")
 
-#The "r" before the path converts string from a normal string to a RAW string.
-customPth = r(pathInput)
-
-mc.file(rename=customPth)
+# Creates your cube under custom file and location here.
+mc.file(rename = finalDirectory)
 mc.file(save=True, type="mayaAscii")
-print("Your cube is saved as 'yourCube_01.ma' to your desktop.")
+print("Your cube is saved as '" + fileNameExt + "' to this path: \n" + pathInput + "\n")
